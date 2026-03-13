@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS shrimp_species (
     INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 虾商品表
+-- 虾商品表 (目录包模式)
 CREATE TABLE IF NOT EXISTS products (
     id INT PRIMARY KEY AUTO_INCREMENT,
     species_id INT NOT NULL,
@@ -53,6 +53,8 @@ CREATE TABLE IF NOT EXISTS products (
     age INT COMMENT '月龄',
     gender VARCHAR(10) COMMENT '性别(公/母/未知)',
     images JSON COMMENT '图片JSON数组',
+    file_url VARCHAR(255) COMMENT '目录包文件链接',
+    file_size VARCHAR(50) COMMENT '文件大小(MB)',
     province VARCHAR(50) COMMENT '省份',
     city VARCHAR(50) COMMENT '城市',
     view_count INT DEFAULT 0,
@@ -68,7 +70,7 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 订单表
+-- 订单表 (目录包下载模式)
 CREATE TABLE IF NOT EXISTS orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
     order_no VARCHAR(64) NOT NULL UNIQUE COMMENT '订单号',
@@ -77,12 +79,11 @@ CREATE TABLE IF NOT EXISTS orders (
     seller_id INT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL COMMENT '订单金额',
     quantity INT DEFAULT 1,
-    status VARCHAR(20) DEFAULT 'pending' COMMENT 'pending=待付款 paid=已付款 shipped=已发货 completed=已完成 cancelled=已取消 refunded=已退款',
+    status VARCHAR(20) DEFAULT 'pending' COMMENT 'pending=待付款 paid=已付款 completed=已完成 cancelled=已取消 refunded=已退款',
     payment_method VARCHAR(20) COMMENT '支付方式',
     payment_time DATETIME COMMENT '支付时间',
-    shipping_address TEXT COMMENT '收货地址',
-    shipping_name VARCHAR(50) COMMENT '收货人',
-    shipping_phone VARCHAR(20) COMMENT '收货电话',
+    download_url VARCHAR(255) COMMENT '下载链接',
+    download_count INT DEFAULT 0 COMMENT '下载次数',
     remark TEXT COMMENT '备注',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 export default function UserPage() {
-  const userShrimps = mockShrimps.filter(s => user.shrimps.includes(s.id));
+  const userShrimps = mockShrimps.filter(s => mockUser.shrimps.includes(s.id));
   const userRank = mockLeaderboard.find(l => l.userId === 'current-user');
 
   return (
@@ -40,13 +40,13 @@ export default function UserPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 -mt-12">
               <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
                 <AvatarFallback className="text-4xl bg-gradient-to-br from-rose-400 to-orange-400">
-                  {user.avatar}
+                  {mockUser.avatar}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-1">
-                  <h1 className="text-2xl font-bold">{user.name}</h1>
-                  <Badge className="bg-gradient-to-r from-rose-500 to-orange-500">Lv.{user.level}</Badge>
+                  <h1 className="text-2xl font-bold">{mockUser.name}</h1>
+                  <Badge className="bg-gradient-to-r from-rose-500 to-orange-500">Lv.{mockUser.level}</Badge>
                 </div>
                 <p className="text-slate-500">虾群大师 · 加入于 2024年1月</p>
               </div>
@@ -63,7 +63,7 @@ export default function UserPage() {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
               <div className="p-4 rounded-xl bg-slate-50 text-center">
-                <p className="text-2xl font-bold text-rose-500">{user.coins.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-rose-500">{mockUser.coins.toLocaleString()}</p>
                 <p className="text-sm text-slate-500">金币</p>
               </div>
               <div className="p-4 rounded-xl bg-slate-50 text-center">
@@ -71,7 +71,7 @@ export default function UserPage() {
                 <p className="text-sm text-slate-500">虾群</p>
               </div>
               <div className="p-4 rounded-xl bg-slate-50 text-center">
-                <p className="text-2xl font-bold text-green-500">{user.wins}</p>
+                <p className="text-2xl font-bold text-green-500">{mockUser.wins}</p>
                 <p className="text-sm text-slate-500">胜利</p>
               </div>
               <div className="p-4 rounded-xl bg-slate-50 text-center">
@@ -84,7 +84,7 @@ export default function UserPage() {
             <div className="mt-6 p-4 rounded-xl bg-slate-50">
               <div className="flex justify-between text-sm mb-2">
                 <span>升级进度</span>
-                <span>{user.level} → {user.level + 1}</span>
+                <span>{mockUser.level} → {mockUser.level + 1}</span>
               </div>
               <Progress value={65} className="h-2" />
               <p className="text-xs text-slate-500 mt-2">再获得 3500 经验值即可升级</p>

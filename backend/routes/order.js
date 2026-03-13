@@ -12,11 +12,11 @@ const generateOrderNo = () => {
     return `SHRIMP${dateStr}${random}`;
 };
 
-// 创建订单
+// 创建订单 (目录包下载模式)
 router.post('/create', authenticateToken, async (req, res, next) => {
     try {
         const buyerId = req.user.id;
-        const { product_id, quantity = 1, shipping_address, shipping_name, shipping_phone, remark } = req.body;
+        const { product_id, quantity = 1, remark } = req.body;
 
         if (!product_id) {
             return res.status(400).json({
@@ -62,14 +62,12 @@ router.post('/create', authenticateToken, async (req, res, next) => {
         // 生成订单号
         const orderNo = generateOrderNo();
 
-        // 创建订单
+        // 创建订单 (目录包模式，无需收货地址)
         const [result] = await pool.query(
             `INSERT INTO orders 
-             (order_no, buyer_id, product_id, seller_id, amount, quantity, 
-              shipping_address, shipping_name, shipping_phone, remark) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [orderNo, buyerId, product_id, product.seller_id, amount, quantity,
-             shipping_address, shipping_name, shipping_phone, remark]
+             (order_no, buyer_id, product_id, seller_id, amount, quantity, remark) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [orderNo, buyerId, product_id, product.seller_id, amount, quantity, remark]
         );
 
         res.status(201).json({
@@ -327,7 +325,7 @@ router.post('/cancel/:id', authenticateToken, async (req, res, next) => {
     }
 });
 
-// 确认收货
+// 确认下载 (目录包模式：付款后自动生成下载链接)
 router.post('/confirm/:id', authenticateToken, async (req, res, next) => {
     try {
         const orderId = req.params.id;
@@ -348,23 +346,41 @@ router.post('/confirm/:id', authenticateToken, async (req, res, next) => {
 
         const order = orders[0];
 
-        // 只有已发货的订单可以确认收货
-        if (order.status !== 'shipped') {
+        // 目录包模式：已付款订单可直接下载
+        if (order.status !== 'paid') {
             return res.status(400).json({
                 code: 400,
-                message: '当前状态无法确认收货'
+                message: '当前状态无法下载'
             });
         }
+
+        // 获取商品信息以生成下载链接
+        const [products] = await pool.query(
+            'SELECT * FROM products WHERE id = ?',
+            [order.product_id]
+        );
+
+        if (products.length === 0) {
+            return res.status(404).json({
+                code: 404,
+                message: '商品不存在'
+            });
+        }
+
+        const product = products[0];
 
         // 开启事务
         const connection = await pool.getConnection();
         try {
             await connection.beginTransaction();
 
-            // 更新订单状态为已完成
+            // 生成下载链接 (模拟：实际应该存储在云存储)
+            const downloadUrl = `/downloads/${order.order_no}/${product.id}`;
+
+            // 更新订单状态为已完成，同时保存下载链接
             await connection.query(
-                'UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?',
-                ['completed', orderId]
+                'UPDATE orders SET status = ?, download_url = ?, updated_at = NOW() WHERE id = ?',
+                ['completed', downloadUrl, orderId]
             );
 
             // 更新卖家销售统计
@@ -383,7 +399,11 @@ router.post('/confirm/:id', authenticateToken, async (req, res, next) => {
 
             res.json({
                 code: 200,
-                message: '确认收货成功'
+                message: '下载链接已生成',
+                data: {
+                    download_url: downloadUrl,
+                    product_title: product.title
+                }
             });
 
         } catch (error) {
@@ -392,6 +412,66 @@ router.post('/confirm/:id', authenticateToken, async (req, res, next) => {
         } finally {
             connection.release();
         }
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+// 获取下载链接 (已完成的订单)
+router.get('/download/:id', authenticateToken, async (req, res, next) => {
+    try {
+        const orderId = req.params.id;
+        const userId = req.user.id;
+
+        // 查询订单
+        const [orders] = await pool.query(
+            'SELECT * FROM orders WHERE id = ? AND buyer_id = ?',
+            [orderId, userId]
+        );
+
+        if (orders.length === 0) {
+            return res.status(404).json({
+                code: 404,
+                message: '订单不存在'
+            });
+        }
+
+        const order = orders[0];
+
+        // 只有已完成的订单才能下载
+        if (order.status !== 'completed') {
+            return res.status(400).json({
+                code: 400,
+                message: '订单未完成，无法下载'
+            });
+        }
+
+        // 获取商品信息
+        const [products] = await pool.query(
+            'SELECT * FROM products WHERE id = ?',
+            [order.product_id]
+        );
+
+        if (products.length === 0) {
+            return res.status(404).json({
+                code: 404,
+                message: '商品不存在'
+            });
+        }
+
+        const product = products[0];
+
+        // 返回下载信息
+        res.json({
+            code: 200,
+            message: 'success',
+            data: {
+                download_url: order.download_url || `/downloads/${order.order_no}/${product.id}`,
+                product_title: product.title,
+                order_no: order.order_no
+            }
+        });
 
     } catch (error) {
         next(error);
