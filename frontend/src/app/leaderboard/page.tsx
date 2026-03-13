@@ -33,39 +33,43 @@ export default function LeaderboardPage() {
   const rest = mockLeaderboard.slice(3);
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-slate-900 py-8 px-4 sm:px-6 lg:px-8 relative">
+      {/* Scanline effect */}
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(transparent_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(0,255,255,0.03)_1px,transparent_1px)] bg-[size:4px_4px,30px_30px,30px_30px] z-0" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-purple-500/5 to-transparent z-0" />
+      
+      <div className="max-w-4xl mx-auto space-y-8 relative z-10">
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="flex justify-center">
-            <Trophy className="w-16 h-16 text-yellow-500" />
+            <Trophy className="w-16 h-16 text-yellow-400 neon-text" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl font-bold neon-text">
             排行榜
           </h1>
-          <p className="text-slate-500">最强虾王争夺战！</p>
+          <p className="text-gray-400">最强虾王争夺战！</p>
         </div>
 
         {/* Top 3 Podium */}
-        <Card className="overflow-hidden">
+        <Card className="glass-effect overflow-hidden">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
               {/* 2nd Place */}
               <div className="order-2 sm:order-1">
                 <div className="text-center">
-                  <Avatar className="w-16 h-16 mx-auto mb-2">
-                    <AvatarFallback className="bg-gradient-to-br from-slate-200 to-slate-300 text-2xl">
+                  <Avatar className="w-16 h-16 mx-auto mb-2 border-2 border-gray-400">
+                    <AvatarFallback className="bg-gradient-to-br from-gray-600 to-gray-700 text-2xl">
                       {topThree[1].avatar}
                     </AvatarFallback>
                   </Avatar>
-                  <Badge className={rankBadges[2]}>🥈</Badge>
-                  <h3 className="font-semibold mt-2">{topThree[1].userName}</h3>
-                  <p className="text-sm text-slate-500">Score: {topThree[1].score.toLocaleString()}</p>
+                  <Badge className="bg-gradient-to-r from-gray-400 to-gray-500">🥈</Badge>
+                  <h3 className="font-semibold mt-2 text-cyan-100">{topThree[1].userName}</h3>
+                  <p className="text-sm text-gray-400">Score: {topThree[1].score.toLocaleString()}</p>
                 </div>
-                <div className="mt-4 h-24 bg-gradient-to-t from-slate-200 to-slate-100 rounded-t-lg flex items-end justify-center pb-2">
+                <div className="mt-4 h-24 bg-gradient-to-t from-gray-600 to-gray-800 rounded-t-lg flex items-end justify-center pb-2 border border-gray-500/30">
                   <div className="text-center">
-                    <Sword className="w-4 h-4 mx-auto text-slate-500" />
-                    <span className="text-xs text-slate-500">{topThree[1].wins}胜</span>
+                    <Sword className="w-4 h-4 mx-auto text-gray-400" />
+                    <span className="text-xs text-gray-400">{topThree[1].wins}胜</span>
                   </div>
                 </div>
               </div>
@@ -74,21 +78,21 @@ export default function LeaderboardPage() {
               <div className="order-1 sm:order-2">
                 <div className="text-center">
                   <div className="relative inline-block">
-                    <Avatar className="w-20 h-20 mx-auto mb-2">
-                      <AvatarFallback className="bg-gradient-to-br from-yellow-300 to-yellow-500 text-3xl">
+                    <Avatar className="w-20 h-20 mx-auto mb-2 border-2 border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.5)]">
+                      <AvatarFallback className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-3xl">
                         {topThree[0].avatar}
                       </AvatarFallback>
                     </Avatar>
-                    <Crown className="w-6 h-6 absolute -top-2 -right-2 text-yellow-500" />
+                    <Crown className="w-6 h-6 absolute -top-2 -right-2 text-yellow-400" />
                   </div>
-                  <Badge className={rankBadges[1]}>🥇</Badge>
-                  <h3 className="font-bold text-lg mt-2">{topThree[0].userName}</h3>
-                  <p className="text-sm text-rose-500 font-semibold">Score: {topThree[0].score.toLocaleString()}</p>
+                  <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 shadow-[0_0_10px_rgba(250,204,21,0.5)]">🥇</Badge>
+                  <h3 className="font-bold text-lg mt-2 text-cyan-100">{topThree[0].userName}</h3>
+                  <p className="text-sm text-pink-400 font-semibold">Score: {topThree[0].score.toLocaleString()}</p>
                 </div>
-                <div className="mt-4 h-32 bg-gradient-to-t from-yellow-300 to-yellow-100 rounded-t-lg flex items-end justify-center pb-2">
+                <div className="mt-4 h-32 bg-gradient-to-t from-yellow-500 to-yellow-700 rounded-t-lg flex items-end justify-center pb-2 border border-yellow-400/30 shadow-[0_0_20px_rgba(250,204,21,0.3)]">
                   <div className="text-center">
-                    <Sword className="w-5 h-5 mx-auto text-yellow-600" />
-                    <span className="text-xs text-yellow-700">{topThree[0].wins}胜</span>
+                    <Sword className="w-5 h-5 mx-auto text-yellow-300" />
+                    <span className="text-xs text-yellow-200">{topThree[0].wins}胜</span>
                   </div>
                 </div>
               </div>
@@ -96,19 +100,19 @@ export default function LeaderboardPage() {
               {/* 3rd Place */}
               <div className="order-3">
                 <div className="text-center">
-                  <Avatar className="w-16 h-16 mx-auto mb-2">
-                    <AvatarFallback className="bg-gradient-to-br from-amber-200 to-amber-400 text-2xl">
+                  <Avatar className="w-16 h-16 mx-auto mb-2 border-2 border-amber-500">
+                    <AvatarFallback className="bg-gradient-to-br from-amber-600 to-amber-700 text-2xl">
                       {topThree[2].avatar}
                     </AvatarFallback>
                   </Avatar>
-                  <Badge className={rankBadges[3]}>🥉</Badge>
-                  <h3 className="font-semibold mt-2">{topThree[2].userName}</h3>
-                  <p className="text-sm text-slate-500">Score: {topThree[2].score.toLocaleString()}</p>
+                  <Badge className="bg-gradient-to-r from-amber-500 to-amber-600">🥉</Badge>
+                  <h3 className="font-semibold mt-2 text-cyan-100">{topThree[2].userName}</h3>
+                  <p className="text-sm text-gray-400">Score: {topThree[2].score.toLocaleString()}</p>
                 </div>
-                <div className="mt-4 h-16 bg-gradient-to-t from-amber-300 to-amber-100 rounded-t-lg flex items-end justify-center pb-2">
+                <div className="mt-4 h-16 bg-gradient-to-t from-amber-600 to-amber-800 rounded-t-lg flex items-end justify-center pb-2 border border-amber-500/30">
                   <div className="text-center">
-                    <Sword className="w-4 h-4 mx-auto text-amber-600" />
-                    <span className="text-xs text-amber-700">{topThree[2].wins}胜</span>
+                    <Sword className="w-4 h-4 mx-auto text-amber-400" />
+                    <span className="text-xs text-amber-300">{topThree[2].wins}胜</span>
                   </div>
                 </div>
               </div>
@@ -118,62 +122,62 @@ export default function LeaderboardPage() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2 justify-center">
-          <Button variant="secondary" className="bg-rose-500 hover:bg-rose-600 text-white">
+          <Button variant="secondary" className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 text-white">
             综合榜
           </Button>
-          <Button variant="outline">胜率榜</Button>
-          <Button variant="outline">财富榜</Button>
-          <Button variant="outline">虾群榜</Button>
+          <Button variant="outline" className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20">胜率榜</Button>
+          <Button variant="outline" className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20">财富榜</Button>
+          <Button variant="outline" className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20">虾群榜</Button>
         </div>
 
         {/* Full Leaderboard */}
-        <Card>
+        <Card className="glass-effect">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2 text-cyan-100">
+              <Users className="w-5 h-5 text-cyan-400" />
               完整排行榜
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="divide-y">
+            <div className="divide-y divide-cyan-500/20">
               {mockLeaderboard.map((item, index) => (
                 <div
                   key={item.userId}
                   className={`flex items-center gap-4 py-4 ${
-                    item.userId === 'current-user' ? 'bg-rose-50 -mx-6 px-6 rounded-lg' : ''
+                    item.userId === 'current-user' ? 'bg-cyan-500/10 -mx-6 px-6 rounded-lg border border-cyan-500/30' : ''
                   }`}
                 >
                   <div className="w-8 text-center">
                     {item.rank <= 3 ? (
                       rankIcons[item.rank]
                     ) : (
-                      <span className="text-lg font-bold text-slate-400">#{item.rank}</span>
+                      <span className="text-lg font-bold text-gray-500">#{item.rank}</span>
                     )}
                   </div>
-                  <Avatar>
-                    <AvatarFallback className="bg-gradient-to-br from-rose-200 to-orange-200">
+                  <Avatar className="border border-cyan-500/30">
+                    <AvatarFallback className="bg-gradient-to-br from-purple-600 to-cyan-600">
                       {item.avatar}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold">{item.userName}</span>
+                      <span className="font-semibold text-cyan-100">{item.userName}</span>
                       {item.userId === 'current-user' && (
-                        <Badge variant="secondary" className="text-xs">你</Badge>
+                        <Badge variant="secondary" className="text-xs bg-cyan-500/20 text-cyan-300 border-cyan-500/30">你</Badge>
                       )}
                     </div>
-                    <div className="flex gap-4 text-sm text-slate-500">
+                    <div className="flex gap-4 text-sm text-gray-400">
                       <span className="flex items-center gap-1">
-                        <Sword className="w-3 h-3" /> {item.wins}胜
+                        <Sword className="w-3 h-3 text-pink-400" /> {item.wins}胜
                       </span>
                       <span className="flex items-center gap-1">
-                        <Shell className="w-3 h-3" /> {item.shrimps}虾
+                        <Shell className="w-3 h-3 text-cyan-400" /> {item.shrimps}虾
                       </span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-lg">{item.score.toLocaleString()}</p>
-                    <p className="text-xs text-slate-500">积分</p>
+                    <p className="font-bold text-lg text-cyan-100">{item.score.toLocaleString()}</p>
+                    <p className="text-xs text-gray-500">积分</p>
                   </div>
                 </div>
               ))}
@@ -183,25 +187,25 @@ export default function LeaderboardPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card>
+          <Card className="glass-effect hover:border-yellow-500/30 transition-all duration-300">
             <CardContent className="p-6 text-center">
-              <Zap className="w-8 h-8 mx-auto mb-2 text-yellow-500" />
-              <p className="text-2xl font-bold">9,850</p>
-              <p className="text-sm text-slate-500">最高积分</p>
+              <Zap className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
+              <p className="text-2xl font-bold text-cyan-100">9,850</p>
+              <p className="text-sm text-gray-400">最高积分</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="glass-effect hover:border-green-500/30 transition-all duration-300">
             <CardContent className="p-6 text-center">
-              <TrendingUp className="w-8 h-8 mx-auto mb-2 text-green-500" />
-              <p className="text-2xl font-bold">+12</p>
-              <p className="text-sm text-slate-500">本周排名变化</p>
+              <TrendingUp className="w-8 h-8 mx-auto mb-2 text-green-400" />
+              <p className="text-2xl font-bold text-cyan-100">+12</p>
+              <p className="text-sm text-gray-400">本周排名变化</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="glass-effect hover:border-purple-500/30 transition-all duration-300">
             <CardContent className="p-6 text-center">
-              <Star className="w-8 h-8 mx-auto mb-2 text-purple-500" />
-              <p className="text-2xl font-bold">42</p>
-              <p className="text-sm text-slate-500">本周胜场</p>
+              <Star className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+              <p className="text-2xl font-bold text-cyan-100">42</p>
+              <p className="text-sm text-gray-400">本周胜场</p>
             </CardContent>
           </Card>
         </div>
